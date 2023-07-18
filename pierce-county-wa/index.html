@@ -211,6 +211,16 @@ map.on('load', function () {
         url: "mapbox://jedlebi.acnqo4cq"
     });
     
+    // Load an image from an external URL.
+    map.loadImage('./bank.png', (error, image) => {
+        if (error) throw error;
+        map.addImage('bank-png', image);
+    });
+    map.loadImage('./credit-union.png', (error, image) => {
+        if (error) throw error;
+        map.addImage('cu-png', image);
+    });
+    
     // layers created from sources
     map.addLayer({
         id: "branches",
@@ -218,7 +228,7 @@ map.on('load', function () {
         source: "fdic",
         "source-layer": "Branches_TacWA-3egojb",
         layout: {
-            "icon-image": "./bank.png",
+            "icon-image": "bank-png",
             "icon-size": 1.5,
         }
         // paint: {
@@ -231,7 +241,7 @@ map.on('load', function () {
         source: "ncua",
         "source-layer": "CreditU_TacWA-1kcku0",
         layout: {
-            "icon-image": "./credit-union.png",
+            "icon-image": "cu-png",
             "icon-size": 1.5,
         }
         // paint: {
