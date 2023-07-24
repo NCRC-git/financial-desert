@@ -58,7 +58,6 @@
             overflow: auto;
             background: rgba(255, 255, 255, 0.8);
         }
-       
         #legend {
             border-radius: 2%;
             padding: 10px;
@@ -67,7 +66,6 @@
             height: 130px;
             width: 100px;
         }
-
         .legend-key {
             border-radius: 20%;
             display: inline-block;
@@ -93,7 +91,8 @@
             padding: 5px;
             border-radius: 5%;
             text-decoration: none;
-            border-bottom: 1px solid rgba(0,0,0,0.25);
+            background-color: #ffffff;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.25);
             box-shadow: 0 1px 2px rgba(0,0,0,0.10);
             text-align: left;
         }
@@ -102,10 +101,12 @@
         }
         #menu a:hover {
             background-color: #f8f8f8;
+            border-radius: 1px;
             color: #404040;
         }
         #menu a.active {
             background-color: #3887be;
+            border: 3px solid #ffffff;
             color: #ffffff;
         }
         #menu a.active:hover {
@@ -130,11 +131,8 @@
 </div>
 <pre id="logo"></pre>
 
-
 <script>
-
 mapboxgl.accessToken = 'pk.eyJ1IjoiamVkbGViaSIsImEiOiJjanhhc3M4NnYwMmxsM3lyODlxYTFhOGRxIn0.746AmyW45uwRPeUy1PczOg';
-
 var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/jedlebi/cku2skjsw2o5817r19li2o5y1',
