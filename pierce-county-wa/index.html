@@ -2,19 +2,13 @@
 <html>
 <head>
     <meta charset='utf-8' />
-    <title>NCRC - Financial Desert Map - Pierce County, WA</title>
+    <title>Financial Desert Map - Pierce County, WA (NCRC)</title>
     <meta name='robots' content='noindex, nofollow'>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.1/mapbox-gl-geocoder.min.js'></script>
-    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.1/mapbox-gl-geocoder.css' type='text/css' />
+    <link rel='stylesheet' href='https: //api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.1/mapbox-gl-geocoder.css' type='text/css' />
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css' rel='stylesheet' />
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-E2HPWQFQ8Z');
-    </script>
     <style>
         body { margin:0; padding:0; }
         h2, h3 {
@@ -71,7 +65,7 @@
             box-shadow: 0 1px 2px rgba(0,0,0,0.30);
             line-height: 15px;
             height: 130px;
-            width: 130px;
+            width: 100px;
         }
 
         .legend-key {
@@ -132,7 +126,7 @@
 <nav id="menu"></nav>
 <div id="map"></div>
 <div class='map-overlay' id='legend'>
-    <h4 style='margin-top:8px'>Branch Access Equity Index</h4>
+    <h4 style='margin-top:8px'>Level of Need</h4>
 </div>
 <pre id="logo"></pre>
 
@@ -144,11 +138,15 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiamVkbGViaSIsImEiOiJjanhhc3M4NnYwMmxsM3lyODlxY
 var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/jedlebi/cku2skjsw2o5817r19li2o5y1',
-    center: [-122.1295,47.0676],
-    zoom: 9,
-    minZoom: 9
+    center: [-122.357172,47.2],
+    zoom: 10,
+    minZoom: 10
 });
 var popup1 = new mapboxgl.Popup({
+    closeButton: true,
+    closeOnClick: false
+});
+var popup1a = new mapboxgl.Popup({
     closeButton: true,
     closeOnClick: false
 });
@@ -156,7 +154,7 @@ var popup2 = new mapboxgl.Popup({
     closeButton: false,
     closeOnClick: false
 });
-var popup3 = new mapboxgl.Popup({
+var popup2a = new mapboxgl.Popup({
     closeButton: false,
     closeOnClick: false
 });
@@ -169,7 +167,7 @@ map.on('load', function () {
     // NCRC logo
     document.getElementById('logo').innerHTML = "<img src='./ncrc.png'>"
     // define layer names
-    var layers = ['High Access',' ',' ',' ','Low Access'];
+    var layers = ['Low',' ',' ',' ','High'];
     var colors = ['#1d5601', '#4fbf18', '#fbdc13', '#f8820d', '#bc0101'];
     var toggleableLayerIds = [ 'Site Suitability Index','Financial Needs Index' ];
 
@@ -194,66 +192,78 @@ map.on('load', function () {
     
 
     // add source layers
-    map.addSource("fdic", { // Branches_TacWA-3egojb
+    map.addSource("fdic", { // BB_TacWA-601g9o
         type: "vector",
-        url: "mapbox://jedlebi.9awdgzpg"
+        url: "mapbox://jedlebi.bh1i3wve"
     });
-    map.addSource("ncua", { // CreditU_TacWA-1kcku0
+    map.addSource("ncua", { // CU_TacWA-87414s
         type: "vector",
-        url: "mapbox://jedlebi.9j8vk5rh"
+        url: "mapbox://jedlebi.cjc2yh96"
     });
-    map.addSource("fni-source", { // FNI_SSI_TacWA-9hdlcf
+    map.addSource("fni-source", { // FNI_TacWA-2b4etm
         type: "vector",
-        url: "mapbox://jedlebi.d9abva3b"
+        url: "mapbox://jedlebi.8eaj623s"
     });
-    map.addSource("ssi-source", { // SSI_TacWA-7neh4y
+    map.addSource("ssi-source", { // SSI_TacWA-7hjozx
         type: "vector",
-        url: "mapbox://jedlebi.acnqo4cq"
-    });
-    
-    // Load an image from an external URL.
-    map.loadImage('./bank.png', (error, image) => {
-        if (error) throw error;
-        map.addImage('bank-png', image);
-    });
-    map.loadImage('./credit-union.png', (error, image) => {
-        if (error) throw error;
-        map.addImage('cu-png', image);
+        url: "mapbox://jedlebi.4v8j73yw"
     });
     
     // layers created from sources
     map.addLayer({
         id: "branches",
-        type: "symbol",
+        type: "circle",
         source: "fdic",
-        "source-layer": "Branches_TacWA-3egojb",
-        layout: {
-            "icon-image": "bank-png",
-            "icon-size": 0.03,
+        "source-layer": "BB_TacWA-601g9o",
+        'paint': {
+            // Make circles larger as the user zooms from z12 to z22.
+            'circle-radius': 5,
+            // Color circles by ethnicity, using a `match` expression.
+            'circle-color': "#473091"
         }
-        // paint: {
-        //     "icon-color": "green"
-        // },
+    });
+    map.addLayer({
+        id: "branches-outline",
+        type: "circle",
+        source: "fdic",
+        "source-layer": "BB_TacWA-601g9o",
+        'paint': {
+            // Make circles larger as the user zooms from z12 to z22.
+            'circle-radius': 6,
+            // Color circles by ethnicity, using a `match` expression.
+            'circle-color': "white"
+        }
     });
     map.addLayer({
         id: "unions",
-        type: "symbol",
+        type: "circle",
         source: "ncua",
-        "source-layer": "CreditU_TacWA-1kcku0",
-        layout: {
-            "icon-image": "cu-png",
-            "icon-size": 0.03,
+        "source-layer": "CU_TacWA-87414s",
+        'paint': {
+            // Make circles larger as the user zooms from z12 to z22.
+            'circle-radius': 5,
+            // Color circles by ethnicity, using a `match` expression.
+            'circle-color': "#c54b82"
         }
-        // paint: {
-        //     "icon-color": "blue"
-        // },
+    });
+    map.addLayer({
+        id: "unions-outline",
+        type: "circle",
+        source: "ncua",
+        "source-layer": "CU_TacWA-87414s",
+        'paint': {
+            // Make circles larger as the user zooms from z12 to z22.
+            'circle-radius': 6,
+            // Color circles by ethnicity, using a `match` expression.
+            'circle-color': "black"
+        }
     });
     map.addLayer({
         id: "Financial Needs Index",
         type: "fill",
         before: "building",
         source: "fni-source",
-        "source-layer": "FNI_SSI_TacWA-9hdlcf",
+        "source-layer": "FNI_TacWA-2b4etm",
         paint: {
         "fill-outline-color": 'rgba(0, 0, 0, 0)',
         'fill-color': [
@@ -275,7 +285,7 @@ map.on('load', function () {
         type: "fill",
         before: "building",
         source: "ssi-source",
-        "source-layer": "SSI_TacWA-7neh4y",
+        "source-layer": "SSI_TacWA-7hjozx",
         paint: {
             "fill-outline-color": 'rgba(0, 0, 0, 0)',
             'fill-color': [
@@ -283,10 +293,10 @@ map.on('load', function () {
                 ['linear'],
                 ['get', 'SSI'], 
                 0, '#1d5601',
-                0.1566236, '#4fbf18',
-                0.3132472, '#fbdc13',
-                0.4698708, '#f8820d',
-                0.783118, '#bc0101'
+                0.027015508, '#4fbf18',
+                0.124774048, '#fbdc13',
+                0.224774048, '#f8820d',
+                0.424468, '#bc0101'
             ],
             "fill-opacity": 1,
             'fill-antialias': true,
@@ -294,6 +304,8 @@ map.on('load', function () {
         filter: ["!=", ["get", "FID_SSI_VA"], -1],
     });
     // move layers below certain map features
+    map.moveLayer('unions-outline', 'unions');
+    map.moveLayer('branches-outline', 'branches');
     map.moveLayer('Financial Needs Index', 'road-label');
     map.moveLayer('Financial Needs Index', 'road-primary');
     map.moveLayer('Financial Needs Index', 'road-secondary-tertiary');
@@ -310,51 +322,44 @@ map.on('load', function () {
     map.moveLayer('Site Suitability Index', 'road-polygon');
         
     // When a click event occurs on a feature in the layer, open a popup at the location of the click, with description HTML from its properties.
-    map.on('click', 'tracts', function (e) {
-        var lmi1 = e.features[0].properties.income // Low-to-Moderate Income
-        var lmi2 = e.features[0].properties.income2 // LMI
-        var zip = e.features[0].properties.ZCTA5CE10
-        var nai = e.features[0].properties.nai
-        if (nai < 0.2) {
-            nai1 = "<h1 style=text-align:center;width:100%;>"+ "NAI: " + "<color:#1E4B00>" + nai + "</h1>"
-        } else if (nai >= 0.2 || nai < 0.4) {
-            nai1 = "<h1 style=text-align:center;width:100%;>"+ "NAI: " + "<color:#82BB5D>" + nai + "</h1>"
-        } else if (nai >= 0.4 || nai < 0.6) {
-            nai1 = "<h1 style=text-align:center;width:100%;>"+ "NAI: " + "<color:#AA9439>" + nai + "</h1>"
-        } else if (nai >= 0.6 || nai < 0.8) {
-            nai1 = "<h1 style=text-align:center;width:100%;>"+ "NAI: " + "<color:#BE7A1D>" + nai + "</h1>"
-        } else if (nai >= 0.8) {
-            nai1 = "<h1 style=text-align:center;width:100%;>"+ "NAI: " + "<color:#BE301D>" + nai + "</h1>"
+    map.on('click', 'Financial Needs Index', function (e) {
+        var fni = e.features[0].properties.FNI
+        if (fni < -0.822824) {
+            fni1 = "<h1 style=text-align:center;width:100%;>"+ "FNI: " + "<color:#1E4B00>" + decimalRound2(fni) + "</h1>"
+        } else if (fni >= -0.822824 || fni < -0.411412) {
+            fni1 = "<h1 style=text-align:center;width:100%;>"+ "FNI: " + "<color:#82BB5D>" + decimalRound2(fni) + "</h1>"
+        } else if (fni >= -0.411412 || fni < 0) {
+            fni1 = "<h1 style=text-align:center;width:100%;>"+ "FNI: " + "<color:#AA9439>" + decimalRound2(fni) + "</h1>"
+        } else if (fni >= 0 || fni < 0.411412) {
+            fni1 = "<h1 style=text-align:center;width:100%;>"+ "FNI: " + "<color:#BE7A1D>" + decimalRound2(fni) + "</h1>"
+        } else if (fni >= 0.411412) {
+            fni1 = "<h1 style=text-align:center;width:100%;>"+ "FNI: " + "<color:#BE301D>" + decimalRound2(fni) + "</h1>"
         } else {
             null
         }
-        var tract = e.features[0].properties.geoid
-        var busden = decimalRound0(e.features[0].properties.busden) + "/mi" + "<sup>2</sup>"
+        var t20 = e.features[0].properties.GEOID20
         var popden = decimalRound0(e.features[0].properties.popden) + "/mi" + "<sup>2</sup>"
-        var min = e.features[0].properties.minority_p + "%"
-        var pop = decimalRound0(e.features[0].properties.population)
-
+        var intsub = decimalRound1(e.features[0].properties.phh_intsub) + "%"
+        var sphone = decimalRound1(e.features[0].properties.phh_sphone) + "%"
+        var min = decimalRound2(e.features[0].properties.min_pop) + "%"
+        var bb = decimalRound2(e.features[0].properties.near_bb/1609.34) + " mi"
+        var cu = decimalRound2(e.features[0].properties.near_cu/1609.34) + " mi"
         popup1
             .setLngLat(e.lngLat)
             .setHTML(
-            nai1 +
-            "<table style='width:100%;text-align:center'>" + 
-                "<tr>" + 
-                    "<th style=color:#990033>"+ lmi1 + "</th>" + 
-                "</tr>" + 
-            "</table>" + 
+            fni1 +
             "<p></p>" +
             "<table style='width:100%;text-align:center'>" + 
                 "<tr>" + 
-                    "<th style='width:60%;text-align:center'>Tract ID</th>" +
-                    "<th style='width:40%;text-align:center'>ZIP</th>" +
+                    "<th style='width:60%;text-align:center'>Block Group</th>" +
+                    "<th style='width:40%;text-align:center'>Pop. Density</th>" +
                 "</tr>" + 
                 "<tr style='font-size:20px;text-align:center'>" + 
                     "<th style='width:60%;text-align:center'>" + 
-                        tract +
+                        t20 +
                     "</th>" +
                     "<th style='width:40%;text-align:center'>" + 
-                        zip +
+                        popden +
                     "</th>" +
                 "</tr>" +
             "</table>" +
@@ -372,12 +377,93 @@ map.on('load', function () {
             "<p></p>" +
             "<table style='width:100%;text-align:center'>" + 
                 "<tr>" + 
+                    "<th style='width:50%'>Internet Access</th>" + 
+                    "<th style='width:50%'>Smartphone Access</th>" + 
+                "</tr>" + 
+                "<tr style='font-size:20px;text-align:center'>" + 
+                    "<th style='width:50%'>" + 
+                        intsub + 
+                    "</th>" + 
+                    "<th style='width:50%'>" + 
+                        sphone +
+                    "</th>" +
+                "</tr>" +
+            "</table>" +
+            "<p></p>" +
+            "<table style='width:100%;text-align:center'>" + 
+                "<tr>" + 
+                    "<th style='width:50%'>Nearest Bank Branch</th>" + 
+                    "<th style='width:50%'>Nearest Credit Union</th>" + 
+                "</tr>" + 
+                "<tr style='font-size:20px;text-align:center'>" + 
+                    "<th style='width:50%'>" + 
+                        bb + 
+                    "</th>" + 
+                    "<th style='width:50%'>" + 
+                        cu +
+                    "</th>" +
+                "</tr>" +
+            "</table>"
+            )
+            .addTo(map);
+    });
+    // When a click event occurs on a feature in the layer, open a popup at the location of the click, with description HTML from its properties.
+    map.on('click', 'Site Suitability Index', function (e) {
+        var t10 = e.features[0].properties.geoid
+        var lmi = e.features[0].properties.lmi // LMI
+        var ssi = decimalRound2(e.features[0].properties.SSI)
+        if (lmi == 0) {
+            lmi1 = 'Middle-to-Upper Income'
+        } else if (lmi == 1) {
+            lmi1 = 'Low-to-Moderate Income'
+        } else {
+            'null'
+        }
+        if (ssi < 0.027015508) {
+            ssi1 = "<h1 style=text-align:center;width:100%;>"+ "SSI: " + "<color:#1E4B00>" + ssi + "</h1>"
+        } else if (ssi >= 0.027015508 || ssi < 0.124774048) {
+            ssi1 = "<h1 style=text-align:center;width:100%;>"+ "SSI: " + "<color:#82BB5D>" + ssi + "</h1>"
+        } else if (ssi >= 0.124774048 || ssi < 0.224774048) {
+            ssi1 = "<h1 style=text-align:center;width:100%;>"+ "SSI: " + "<color:#AA9439>" + ssi + "</h1>"
+        } else if (ssi >= 0.224774048 || ssi < 0.37) {
+            ssi1 = "<h1 style=text-align:center;width:100%;>"+ "SSI: " + "<color:#BE7A1D>" + ssi + "</h1>"
+        } else if (ssi >= 0.37) {
+            ssi1 = "<h1 style=text-align:center;width:100%;>"+ "SSI: " + "<color:#BE301D>" + ssi + "</h1>"
+        } else {
+            null
+        }
+        var busden = decimalRound0(e.features[0].properties.open_busde) + "/mi" + "<sup>2</sup>"
+        var popden2 = decimalRound0(e.features[0].properties.popden21) + "/mi" + "<sup>2</sup>"
+
+        popup1a
+            .setLngLat(e.lngLat)
+            .setHTML(
+            ssi1 +
+            "<table style='width:100%;text-align:center'>" + 
+                "<tr>" + 
+                    "<th style=color:#990033>"+ lmi1 + "</th>" + 
+                "</tr>" + 
+            "</table>" + 
+            "<p></p>" +
+            "<table style='width:100%;text-align:center'>" + 
+                "<tr>" + 
+                    "<th style='width:100%;text-align:center'>Tract ID</th>" +
+                "</tr>" + 
+                "<tr style='font-size:20px;text-align:center'>" + 
+                    "<th style='width:100%;text-align:center'>" + 
+                        t10 +
+                    "</th>" +
+                "</tr>" +
+            "</table>" +
+            "<p></p>" +
+            "<table style='width:100%;text-align:center'>" + 
+                "<tr>" + 
                     "<th style='width:50%'>Population Density</th>" + 
                     "<th style='width:50%'>Business Density</th>" + 
                 "</tr>" + 
                 "<tr style='font-size:20px;text-align:center'>" + 
                     "<th style='width:50%'>" + 
-                        popden + 
+                        popden2 + 
                     "</th>" + 
                     "<th style='width:50%'>" + 
                         busden +
@@ -387,6 +473,7 @@ map.on('load', function () {
             )
             .addTo(map);
     });
+
     map.on('mouseenter', 'branches', function (e) {
         var bank = e.features[0].properties.bank_name
         var branch = e.features[0].properties.branch_nam
@@ -398,6 +485,11 @@ map.on('load', function () {
         popup2
             .setLngLat(e.lngLat)
             .setHTML(
+                "<table style='width:100%;text-align:center'>" + 
+                "<tr style='font-size:15px;text-align:center'>" + 
+                    "<td style=font-style:italic>Full Service Bank Branch</th>" + 
+                "</tr>" + 
+            "</table>" +
             "<table style='width:100%;text-align:center'>" + 
                 "<tr style='font-size:20px;text-align:center'>" + 
                     "<th>"+ bank + "</th>" + 
@@ -427,62 +519,159 @@ map.on('load', function () {
     });
     map.on('mouseleave', 'branches', function () {
         popup2.remove();
+
+    });
+    map.on('mouseenter', 'unions', function (e) {
+        var union_name = e.features[0].properties.CU_NAME
+        var union_branch = e.features[0].properties.SiteName
+        var cu_address = e.features[0].properties.PhysicalAd
+        var cu_city = e.features[0].properties.City
+        var cu_state = e.features[0].properties.State
+        var cu_zip = e.features[0].properties.Zip
+
+        popup2a
+            .setLngLat(e.lngLat)
+            .setHTML(
+            "<table style='width:100%;text-align:center'>" + 
+                "<tr style='font-size:15px;text-align:center'>" + 
+                    "<td style=font-style:italic>Credit Union</th>" + 
+                "</tr>" + 
+            "</table>" +
+            "<table style='width:100%;text-align:center'>" + 
+                "<tr style='font-size:20px;text-align:center'>" + 
+                    "<th>"+ union_name + "</th>" + 
+                "</tr>" + 
+            "</table>" + 
+            "<table style='width:100%;text-align:center'>" + 
+                "<tr style='font-size:15px;text-align:center'>" + 
+                    "<td style=font-style:italic>" + 
+                        union_branch +
+                    "</td>" +
+                "</tr>" +
+            "</table>" +
+            "<table style='width:100%;text-align:center'>" + 
+                "<tr>" + 
+                    "<td>" + 
+                        cu_address +
+                    "</td>" +
+                "</tr>" + 
+                "<tr>" + 
+                    "<td>" + 
+                        cu_city + ", " + cu_state + " " + cu_zip +
+                    "</td>" +
+                "</tr>" +
+            "</table>"
+            )
+            .addTo(map);
+    });
+    map.on('mouseleave', 'unions', function () {
+        popup2a.remove();
     });
 
     // Change the cursor to a pointer when the mouse is over the layer.
-    map.on('mouseenter', 'nai', function () {
+    map.on('mouseenter', 'Financial Needs Index', function () {
         map.getCanvas().style.cursor = 'pointer';
     });
-
     // Change it back to a pointer when it leaves.
-    map.on('mouseleave', 'nai', function () {
+    map.on('mouseleave', 'Financial Needs Index', function () {
         map.getCanvas().style.cursor = '';
     });
-    
+
+    // Change the cursor to a pointer when the mouse is over the layer.
+    map.on('mouseenter', 'Site Suitability Index', function () {
+        map.getCanvas().style.cursor = 'pointer';
+    });
+    // Change it back to a pointer when it leaves.
+    map.on('mouseleave', 'Site Suitability Index', function () {
+        map.getCanvas().style.cursor = '';
+    });
+
+    map.on('click', 'Financial Needs Index', function (e) {
+    // Set the active layer to 'Financial Needs Index'
+    activeLayer = 'Financial Needs Index';
+    // Hide the 'Site Suitability Index' popup
+    popup1a.remove();
+    // ... existing code for popup content ...
+    popup1.setLngLat(e.lngLat).addTo(map);
+    });
+    map.on('click', 'Site Suitability Index', function (e) {
+    // Set the active layer to 'Site Suitability Index'
+    activeLayer = 'Site Suitability Index';
+    // Hide the 'Financial Needs Index' popup
+    popup1.remove();
+    // ... existing code for popup content ...
+    popup1a.setLngLat(e.lngLat).addTo(map);
+    });
+    // Click event for the entire map
+    map.on('click', function (e) {
+    // Hide both popups if there is no active layer
+    if (!activeLayer) {
+        popup1.remove();
+        popup1a.remove();
+        return;
+    }
+    // Check the active layer and show the corresponding popup
+    if (activeLayer === 'Financial Needs Index') {
+        // Open the 'Financial Needs Index' popup
+        popup1.setLngLat(e.lngLat).addTo(map);
+        // Hide the 'Site Suitability Index' popup
+        popup1a.remove();
+    } else if (activeLayer === 'Site Suitability Index') {
+        // Open the 'Site Suitability Index' popup
+        popup1a.setLngLat(e.lngLat).addTo(map);
+        // Hide the 'Financial Needs Index' popup
+        popup1.remove();
+    }
+    });
+
     // Add a search bar to the map.
     map.addControl(new MapboxGeocoder({
         accessToken: mapboxgl.accessToken,
-        bbox: [-83.313051,38.431551,-74.975319,42.453111],
+        bbox: [-124.763068,45.543541,-116.915989,49.002494],
         mapboxgl: mapboxgl
     }));
     
     // Add in option for full-screen.
     map.addControl(new mapboxgl.FullscreenControl());
 
+    // Create toggleable layers that switch on and off interdependently. Meaning as one is active, the other is not active.
     for (var i = 0; i < toggleableLayerIds.length; i++) {
-		var ide = toggleableLayerIds[i];
- 		// var color = colors[i];
+        var layerId = toggleableLayerIds[i];
         var item = document.createElement('div');
- 		var key = document.createElement('span');
-        key.className = 'legend-key';
-        // key.style.backgroundColor = color;
-		var link = document.createElement('a');
-		link.href = '#';
-		link.className = 'active';
-		link.textContent = ide;
- 
-		link.onclick = function (e) {
-			var clickedLayer = this.textContent;
-			e.preventDefault();
-			e.stopPropagation();
- 
-			var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
-			
-			 
-			if (visibility != 'none') {
-				map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-				this.className = '';
-			} else {
-				this.className = 'active';
-				map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
-			}
-		};
- 		
-		var fills = document.getElementById('menu');
-		fills.appendChild(key);
-		fills.appendChild(link);
-	}
+        var link = document.createElement('a');
+        link.href = '#';
+        link.className = 'inactive'; // Initially set as inactive
+        link.textContent = layerId;
+        link.onclick = function (e) {
+            var clickedLayer = this.textContent;
+            e.preventDefault();
+            e.stopPropagation();
 
+            if (clickedLayer !== activeLayer) {
+            // Hide the currently active layer
+            if (activeLayer) {
+                map.setLayoutProperty(activeLayer, 'visibility', 'none');
+                var activeLink = document.querySelector('a[data-layer="' + activeLayer + '"]');
+                if (activeLink) {
+                activeLink.className = 'inactive';
+                }
+            }
+            // Show the clicked layer and update the activeLayer variable
+            map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+            activeLayer = clickedLayer;
+            this.className = 'active';
+            }
+        };
+        link.setAttribute('data-layer', layerId);
+        var fills = document.getElementById('menu');
+        fills.appendChild(link);
+        if (layerId === 'Site Suitability Index') {
+            activeLayer = layerId;
+            link.className = 'active';
+            // Set the visibility of the "Site Suitability Index" layer to visible
+            map.setLayoutProperty(layerId, 'visibility', 'visible');
+        }
+    }
     // create legend
     for (i=0; i<layers.length; i++) {
        var layer = layers[i];
