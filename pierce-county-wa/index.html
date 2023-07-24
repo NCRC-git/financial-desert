@@ -5,8 +5,8 @@
     <title>Financial Desert Map - Pierce County, WA (NCRC)</title>
     <meta name='robots' content='noindex, nofollow'>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.1/mapbox-gl-geocoder.min.js'></script>
-    <link rel='stylesheet' href='https: //api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.1/mapbox-gl-geocoder.css' type='text/css' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js'></script>
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css' type='text/css' />
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css' rel='stylesheet' />
     <style>
@@ -216,9 +216,7 @@ map.on('load', function () {
         source: "fdic",
         "source-layer": "BB_TacWA-601g9o",
         'paint': {
-            // Make circles larger as the user zooms from z12 to z22.
             'circle-radius': 5,
-            // Color circles by ethnicity, using a `match` expression.
             'circle-color': "#473091"
         }
     });
@@ -228,9 +226,7 @@ map.on('load', function () {
         source: "fdic",
         "source-layer": "BB_TacWA-601g9o",
         'paint': {
-            // Make circles larger as the user zooms from z12 to z22.
             'circle-radius': 6,
-            // Color circles by ethnicity, using a `match` expression.
             'circle-color': "white"
         }
     });
@@ -240,9 +236,7 @@ map.on('load', function () {
         source: "ncua",
         "source-layer": "CU_TacWA-87414s",
         'paint': {
-            // Make circles larger as the user zooms from z12 to z22.
             'circle-radius': 5,
-            // Color circles by ethnicity, using a `match` expression.
             'circle-color': "#c54b82"
         }
     });
@@ -252,9 +246,7 @@ map.on('load', function () {
         source: "ncua",
         "source-layer": "CU_TacWA-87414s",
         'paint': {
-            // Make circles larger as the user zooms from z12 to z22.
             'circle-radius': 6,
-            // Color circles by ethnicity, using a `match` expression.
             'circle-color': "black"
         }
     });
