@@ -328,7 +328,7 @@ map.on('load', function () {
             null
         }
         var t20 = e.features[0].properties.GEOID20
-        var popden = decimalRound0(e.features[0].properties.popden) + "/mi" + "<sup>2</sup>"
+        var popden = decimalRound0(e.features[0].properties.popden) + " /mi" + "<sup>2</sup>"
         var intsub = decimalRound1(e.features[0].properties.phh_intsub) + "%"
         var sphone = decimalRound1(e.features[0].properties.phh_sphone) + "%"
         var min = decimalRound2(e.features[0].properties.min_pop) + "%"
@@ -341,25 +341,25 @@ map.on('load', function () {
             "<p></p>" +
             "<table style='width:100%;text-align:center'>" + 
                 "<tr>" + 
-                    "<th style='width:60%;text-align:center'>Block Group</th>" +
-                    "<th style='width:40%;text-align:center'>Pop. Density</th>" +
+                    "<th>Block Group ID</th>" +
                 "</tr>" + 
                 "<tr style='font-size:20px;text-align:center'>" + 
-                    "<th style='width:60%;text-align:center'>" + 
+                    "<th>" + 
                         t20 +
-                    "</th>" +
-                    "<th style='width:40%;text-align:center'>" + 
-                        popden +
                     "</th>" +
                 "</tr>" +
             "</table>" +
             "<p></p>" +
             "<table style='width:100%;text-align:center'>" + 
                 "<tr>" + 
-                    "<th>Minority Population</th>" +
+                    "<th style='width:60%;text-align:center'>Population Density</th>" +
+                    "<th style='width:40%;text-align:center'>Minority Population</th>" +
                 "</tr>" + 
                 "<tr style='font-size:20px;text-align:center'>" + 
-                    "<th>" + 
+                    "<th style='width:60%;text-align:center'>" + 
+                        popden +
+                    "</th>" +
+                    "<th style='width:40%;text-align:center'>" + 
                         min +
                     "</th>" +
                 "</tr>" +
