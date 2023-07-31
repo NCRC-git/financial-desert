@@ -156,6 +156,10 @@ var popup2a = new mapboxgl.Popup({
     closeButton: false,
     closeOnClick: false
 });
+var popup2b = new mapboxgl.Popup({
+    closeButton: false,
+    closeOnClick: false
+});
 
 map.on('load', function () {
     
@@ -198,6 +202,10 @@ map.on('load', function () {
         type: "vector",
         url: "mapbox://jedlebi.cjc2yh96"
     });
+    map.addSource("wsecu", { // wsecu_addresses_geo-9igt7k
+        type: "vector",
+        url: "mapbox://jedlebi.d0n61vkb"
+    });
     map.addSource("fni-source", { // FNI_TacWA-2b4etm
         type: "vector",
         url: "mapbox://jedlebi.8eaj623s"
@@ -236,7 +244,8 @@ map.on('load', function () {
         'paint': {
             'circle-radius': 5,
             'circle-color': "#c54b82"
-        }
+        },
+        filter: ['!=', 'CU_NAME', 'WASHINGTON STATE EMPLOYEES']
     });
     map.addLayer({
         id: "unions-outline",
@@ -245,6 +254,27 @@ map.on('load', function () {
         "source-layer": "CU_TacWA-87414s",
         'paint': {
             'circle-radius': 6,
+            'circle-color': "black"
+        },
+        filter: ['!=', 'CU_NAME', 'WASHINGTON STATE EMPLOYEES']
+    });
+    map.addLayer({
+        id: "wsecu-unions",
+        type: "circle",
+        source: "wsecu",
+        "source-layer": "wsecu_addresses_geo-9igt7k",
+        'paint': {
+            'circle-radius': 8,
+            'circle-color': "#B8E1B2"
+        }
+    });
+    map.addLayer({
+        id: "wsecu-unions-outline",
+        type: "circle",
+        source: "wsecu",
+        "source-layer": "wsecu_addresses_geo-9igt7k",
+        'paint': {
+            'circle-radius': 10,
             'circle-color': "black"
         }
     });
@@ -296,6 +326,9 @@ map.on('load', function () {
     // move layers below certain map features
     map.moveLayer('unions-outline', 'unions');
     map.moveLayer('branches-outline', 'branches');
+    map.moveLayer('wsecu-unions-outline', 'wsecu-unions');
+    map.moveLayer('branches', 'wsecu-unions-outline');
+    map.moveLayer('unions', 'wsecu-unions-outline');
     map.moveLayer('Financial Needs Index', 'road-label');
     map.moveLayer('Financial Needs Index', 'road-primary');
     map.moveLayer('Financial Needs Index', 'road-secondary-tertiary');
@@ -556,6 +589,45 @@ map.on('load', function () {
     });
     map.on('mouseleave', 'unions', function () {
         popup2a.remove();
+    });
+
+    map.on('mouseenter', 'wsecu-unions', function (e) {
+        var wsecu_name = e.features[0].properties.cu_name
+        var cu_add1 = e.features[0].properties.cu_add
+        var cu_city1 = e.features[0].properties.cu_city
+        var cu_state1 = e.features[0].properties.cu_state
+        var cu_zip1 = e.features[0].properties.cu_zip
+
+        popup2b
+            .setLngLat(e.lngLat)
+            .setHTML(
+            "<table style='width:100%;text-align:center'>" + 
+                "<tr style='font-size:15px;text-align:center'>" + 
+                    "<td style=font-style:italic>Credit Union</th>" + 
+                "</tr>" + 
+            "</table>" +
+            "<table style='width:100%;text-align:center'>" + 
+                "<tr style='font-size:20px;text-align:center'>" + 
+                    "<th>"+ wsecu_name + "</th>" + 
+                "</tr>" + 
+            "</table>" + 
+            "<table style='width:100%;text-align:center'>" + 
+                "<tr>" + 
+                    "<td>" + 
+                        cu_add1 +
+                    "</td>" +
+                "</tr>" + 
+                "<tr>" + 
+                    "<td>" + 
+                        cu_city1 + ", " + cu_state1 + " " + cu_zip1 +
+                    "</td>" +
+                "</tr>" +
+            "</table>"
+            )
+            .addTo(map);
+    });
+    map.on('mouseleave', 'wsecu-unions', function () {
+        popup2b.remove();
     });
 
     // Change the cursor to a pointer when the mouse is over the layer.
