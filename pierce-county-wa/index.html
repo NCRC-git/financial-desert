@@ -166,8 +166,6 @@ map.on('load', function () {
     // BASICS
     // make a pointer cursor
     map.getCanvas().style.cursor = 'default';
-    // NCRC logo
-    document.getElementById('logo').innerHTML = "<img src='./ncrc.png'>"
     // define layer names
     var layers = ['Low',' ',' ',' ','High'];
     var colors = ['#1d5601', '#4fbf18', '#fbdc13', '#f8820d', '#bc0101'];
@@ -695,6 +693,9 @@ map.on('load', function () {
     
     // Add in option for full-screen.
     map.addControl(new mapboxgl.FullscreenControl());
+
+    // Add zoom and rotation controls to the map.
+	map.addControl(new mapboxgl.NavigationControl());
 
     // Create toggleable layers that switch on and off interdependently. Meaning as one is active, the other is not active.
     for (var i = 0; i < toggleableLayerIds.length; i++) {
